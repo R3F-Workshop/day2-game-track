@@ -1,6 +1,9 @@
 import { createWorld } from 'koota';
-import { subscribeBlockGrid } from './system/sync-block-grid';
-import { Blocks, Construction, Keys, Pointer, Time, Wheel } from './traits';
+import { subscribeBlockGrid } from './block/systems';
+import { Blocks } from './block/traits';
+import { Construction } from './terrain/traits';
+import { Keys, Pointer, Wheel } from './input/traits';
+import { Time } from './time/traits';
 
 export const world = createWorld(Time, Keys, Pointer, Wheel, Blocks, Construction);
 

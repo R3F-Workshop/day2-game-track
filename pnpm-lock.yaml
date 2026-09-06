@@ -17,6 +17,9 @@ importers:
       koota:
         specifier: ^0.6.6
         version: 0.6.6(@types/react@19.2.18)(react@19.2.8)
+      math:
+        specifier: 1.0.0-canary-37519dcd-20260903
+        version: 1.0.0-canary-37519dcd-20260903
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -708,6 +711,9 @@ packages:
       '@types/three': '>=0.134.0'
       three: '>=0.134.0'
 
+  math@1.0.0-canary-37519dcd-20260903:
+    resolution: {integrity: sha512-aul1nzD8ob5wKMKVQqOXe5ufT/xmiTHxObL81J2ImgNRwpRg+r7IeWOQ2WnD5W/cvpZc7gySwXs0YjVpDtahTQ==}
+
   meshline@3.3.1:
     resolution: {integrity: sha512-/TQj+JdZkeSUOl5Mk2J7eLcYTLiQm2IDzmlSvYm7ov15anEcDJ92GHqqazxTSreeNgfnYu24kiEvvv0WlbCdFQ==}
     peerDependencies:
@@ -1378,6 +1384,8 @@ snapshots:
     dependencies:
       '@types/three': 0.185.4
       three: 0.185.1
+
+  math@1.0.0-canary-37519dcd-20260903: {}
 
   meshline@3.3.1(three@0.185.1):
     dependencies:

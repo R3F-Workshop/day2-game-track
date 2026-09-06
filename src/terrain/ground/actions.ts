@@ -1,0 +1,10 @@
+import { createActions } from 'koota';
+import { PlaneCollider } from '../../physics/traits';
+import { Position } from '../../transform/traits';
+import { Ground } from './traits';
+
+export const groundActions = createActions((world) => ({
+  spawnGround: () => {
+    return world.spawn(Ground, PlaneCollider, Position);
+  },
+}));

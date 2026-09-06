@@ -5,26 +5,23 @@ import { useEffect, useRef } from 'react';
 import { type DirectionalLight, Vector3 } from 'three';
 import { actions } from './actions';
 import { Frameloop } from './frameloop';
-import {
-  Block,
-  Construction,
-  FirstPersonController,
-  Follows,
-  IsThirdPerson,
-  Keys,
-  OrbitController,
-  Pig,
-  Player,
-  Position,
-  Time,
-} from './traits';
+import { Block } from './block/traits';
+import { Construction } from './terrain/traits';
+import { FirstPersonController } from './controllers/firstPersonController';
+import { Follows, IsThirdPerson } from './camera/traits';
+import { OrbitController } from './controllers/orbitController';
+import { Keys } from './input/traits';
+import { Pig } from './character/pig/traits';
+import { Player } from './character/player/traits';
+import { Position } from './transform/traits';
+import { Time } from './time/traits';
 
-import { BlockRenderer } from './view/block-renderer';
-import { CameraRenderer } from './view/camera-renderer';
-import { FirstPersonView } from './view/first-person-view';
-import { GroundRenderer } from './view/ground-renderer';
-import { PigRenderer } from './view/pig-renderer';
-import { PlayerRenderer } from './view/player-renderer';
+import { BlockRenderer } from './block/renderer';
+import { CameraRenderer } from './camera/renderer';
+import { FirstPersonView } from './item/renderer';
+import { GroundRenderer } from './terrain/ground/renderer';
+import { PigRenderer } from './character/pig/renderer';
+import { PlayerRenderer } from './character/player/renderer';
 
 export function App() {
   return (
