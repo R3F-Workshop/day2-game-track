@@ -1,8 +1,8 @@
-import { Sky } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Sky } from '@react-three/drei/webgpu';
+import { Canvas, useFrame } from '@react-three/fiber/webgpu';
 import { useActions, useQueryFirst, useTrait, useWorld } from 'koota/react';
 import { useEffect, useRef } from 'react';
-import { type DirectionalLight, Vector3 } from 'three';
+import { type DirectionalLight, Vector3 } from 'three/webgpu';
 import { actions } from './actions';
 import { Frameloop } from './frameloop';
 import { Block } from './block/traits';

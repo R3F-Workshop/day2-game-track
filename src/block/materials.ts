@@ -1,4 +1,4 @@
-import { useTexture } from '@react-three/drei';
+import { useTexture } from '@react-three/drei/webgpu';
 import {
   CanvasTexture,
   DoubleSide,
@@ -7,7 +7,7 @@ import {
   NearestFilter,
   SRGBColorSpace,
   type Texture,
-} from 'three';
+} from 'three/webgpu';
 import leavesImg from '../assets/blocks/leaves.png';
 import logSideImg from '../assets/blocks/log_side.png';
 import logTopImg from '../assets/blocks/log_top.png';

@@ -1,9 +1,9 @@
-import { Clone, Hud, PerspectiveCamera, useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { Clone, Hud, PerspectiveCamera, useGLTF } from '@react-three/drei/webgpu';
+import { useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useQueryFirst, useTrait } from 'koota/react';
 import { useRef } from 'react';
-import { type Group, MathUtils, Quaternion, Vector3 } from 'three';
+import { type Group, MathUtils, Quaternion, Vector3 } from 'three/webgpu';
 import hammerUrl from '../assets/hammer.glb?url';
 import { FirstPersonBlock, ThirdPersonBlock } from '../block/renderer';
 import { Camera, Follows, IsFirstPerson } from '../camera/traits';

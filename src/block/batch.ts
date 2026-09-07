@@ -10,7 +10,7 @@ import {
   Quaternion,
   type Raycaster,
   Vector3,
-} from 'three';
+} from 'three/webgpu';
 import { BoxCollider } from '../physics/traits';
 import { Reveal } from '../terrain/traits';
 import { Position } from '../transform/traits';

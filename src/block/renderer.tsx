@@ -1,8 +1,8 @@
-import { type ThreeEvent, useFrame } from '@react-three/fiber';
+import { type ThreeEvent, useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useActions, useWorld } from 'koota/react';
 import { useEffect, useMemo } from 'react';
-import { MathUtils } from 'three';
+import { MathUtils } from 'three/webgpu';
 import { itemActions } from '../item/actions';
 import { Mining } from '../item/traits';
 import { Player } from '../character/player/traits';

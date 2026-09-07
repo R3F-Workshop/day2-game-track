@@ -1,9 +1,9 @@
-import { useAnimations, useGLTF } from '@react-three/drei';
-import { createPortal, useFrame } from '@react-three/fiber';
+import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
+import { createPortal, useFrame } from '@react-three/fiber/webgpu';
 import { Entity } from 'koota';
 import { useQuery, useQueryFirst, useTrait, useWorld } from 'koota/react';
 import { useEffect, useMemo } from 'react';
-import { AnimationClip, AnimationUtils, Box3, LoopOnce, Mesh, Object3D, Vector3 } from 'three';
+import { AnimationClip, AnimationUtils, Box3, LoopOnce, Mesh, Object3D, Vector3 } from 'three/webgpu';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import minecraftCharacterUrl from '../../assets/minecraft-character/source/model.gltf?url';
 import { Camera, Follows, IsFirstPerson } from '../../camera/traits';

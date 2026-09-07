@@ -1,8 +1,8 @@
-import { useTexture } from '@react-three/drei';
-import type { ThreeEvent } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei/webgpu';
+import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import { Entity } from 'koota';
 import { useActions, useQueryFirst, useTrait } from 'koota/react';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping } from 'three/webgpu';
 import grassImg from '../../assets/grass.jpg';
 import { itemActions } from '../../item/actions';
 import { Position } from '../../transform/traits';

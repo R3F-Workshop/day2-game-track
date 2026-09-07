@@ -1,4 +1,4 @@
-import { useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber/webgpu';
 import { useWorld } from 'koota/react';
 import { useEffect } from 'react';
 import { subscribeCameraControllerSwap } from './camera/systems';
