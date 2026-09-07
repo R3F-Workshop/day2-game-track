@@ -1,18 +1,28 @@
 import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
 import { createPortal, useFrame } from '@react-three/fiber/webgpu';
 import { Entity } from 'koota';
-import { useQuery, useQueryFirst, useTrait, useWorld } from 'koota/react';
-import { useEffect, useMemo } from 'react';
-import { AnimationClip, AnimationUtils, Box3, LoopOnce, Mesh, Object3D, Vector3 } from 'three/webgpu';
+import { useQuery, useQueryFirst, useTrait, useTraitEffect, useWorld } from 'koota/react';
+import { useEffect, useMemo, useState } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import {
+  AnimationClip,
+  AnimationUtils,
+  Box3,
+  LoopOnce,
+  Mesh,
+  Object3D,
+  type QuaternionTuple,
+  Vector3,
+  type Vector3Tuple,
+} from 'three/webgpu';
 import minecraftCharacterUrl from '../../assets/minecraft-character/source/model.gltf?url';
 import { Camera, Follows, IsFirstPerson } from '../../camera/traits';
-import { IsRiding, IsWalking } from '../stateMachine';
 import { ItemView } from '../../item/renderer';
 import { HeldBy, Item, ToolSwing } from '../../item/traits';
 import { BoxColliderDebug } from '../../physics/renderer';
 import { BoxCollider, Velocity } from '../../physics/traits';
 import { Position, Rotation } from '../../transform/traits';
+import { IsRiding, IsWalking } from '../stateMachine';
 import { Player } from './traits';
 
 export function PlayerRenderer() {
@@ -32,8 +42,10 @@ function PlayerView({ entity }: { entity: Entity }) {
     return [-center.x, -bounds.min.y - (box?.size.y ?? 0) / 2, -center.z] as const;
   }, [box, model]);
 
-  const position = useTrait(entity, Position);
-  const rotation = useTrait(entity, Rotation);
+  const [position, setPosition] = useState<Vector3Tuple>();
+  useTraitEffect(entity, Position, (value) => setPosition(value?.toArray()));
+  const [rotation, setRotation] = useState<QuaternionTuple>();
+  useTraitEffect(entity, Rotation, (value) => setRotation(value?.toArray()));
   const isFirstPerson = useQueryFirst(Camera, IsFirstPerson, Follows(entity)) !== undefined;
   const rightArmJoint = useMemo(() => model.getObjectByName('RightArm'), [model]);
   const heldItem = useQueryFirst(Item, HeldBy(entity));
@@ -53,7 +65,7 @@ function PlayerView({ entity }: { entity: Entity }) {
 
   return (
     <>
-      <group position={position?.toArray()} quaternion={rotation?.toArray()}>
+      <group position={position} quaternion={rotation}>
         <primitive object={model} position={modelOffset} />
         {rightArmJoint &&
           heldItem &&
