@@ -5,13 +5,12 @@ import { CharacterController, Input } from '../../controllers/characterControlle
 import { IsIdle } from '../stateMachine';
 import { Wander } from '../wander';
 import { BoxCollider, Velocity } from '../../physics/traits';
-import { Player } from '../player/traits';
 import { Rideable } from '../../riding/traits';
 import { Position, Rotation } from '../../transform/traits';
 import { Pig } from './traits';
 
 export const pigActions = createActions((world) => {
-  const spawnPig = ({ position = [0, 0, 0] } = {}) => {
+  const spawnPig = (position: Vector3) => {
     return world.spawn(
       Pig,
       Wander,
@@ -20,7 +19,7 @@ export const pigActions = createActions((world) => {
       CharacterController({ maxSpeed: 7, acceleration: 40, turnSpeed: 6 }),
       IsIdle,
       Input,
-      Position(new Vector3(position[0], position[1], position[2])),
+      Position(position.clone()),
       Rotation,
       Velocity,
       // Minecraft's pig hitbox.
@@ -30,22 +29,17 @@ export const pigActions = createActions((world) => {
 
   return {
     spawnPig,
-    // Drops a pig a few blocks from the player in a random direction.
-    spawnPigNearPlayer: ({ minDistance = 2, maxDistance = 4 } = {}) => {
-      const player = world.queryFirst(Player, Position);
-      if (!player) return;
-
-      const origin = player.get(Position)!;
+    spawnPigNear: (position: Vector3, { minDistance = 2, maxDistance = 4 } = {}) => {
       const angle = random.float(Math.random, 0, Math.PI * 2);
       const distance = random.float(Math.random, minDistance, maxDistance);
 
-      return spawnPig({
-        position: [
-          origin.x + Math.cos(angle) * distance,
-          origin.y + 1,
-          origin.z + Math.sin(angle) * distance,
-        ],
-      });
+      return spawnPig(
+        new Vector3(
+          position.x + Math.cos(angle) * distance,
+          position.y + 1,
+          position.z + Math.sin(angle) * distance
+        )
+      );
     },
   };
 });

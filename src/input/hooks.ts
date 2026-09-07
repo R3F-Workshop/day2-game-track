@@ -1,7 +1,9 @@
 import type { World } from 'koota';
 import { useEffect } from 'react';
 import { actions } from '../actions';
+import { Player } from '../character/player/traits';
 import type { ItemKind } from '../item/traits';
+import { Position } from '../transform/traits';
 import { Keys, Pointer, Wheel } from './traits';
 
 // Number keys pick the item in hand, like Minecraft's hotbar.
@@ -12,7 +14,7 @@ export function useKeyboard(world: World) {
     const keys = world.get(Keys)!;
     const {
       toggleCameraPerspective,
-      spawnPigNearPlayer,
+      spawnPigNear,
       requestMountToggle,
       generateWorld,
       selectPlayerItem,
@@ -29,7 +31,10 @@ export function useKeyboard(world: World) {
       const key = event.key.toLowerCase();
 
       if (key === 'f' && !keys.has(key)) toggleCameraPerspective();
-      if (key === 'r' && !keys.has(key)) spawnPigNearPlayer();
+      if (key === 'r' && !keys.has(key)) {
+        const position = world.queryFirst(Player, Position)?.get(Position);
+        if (position) spawnPigNear(position);
+      }
       if (key === 'e' && !keys.has(key)) requestMountToggle();
       if (key === 'g' && !keys.has(key)) generateWorld();
       if (HOTBAR[key] && !keys.has(key)) selectPlayerItem(HOTBAR[key]);

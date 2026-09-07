@@ -57,7 +57,9 @@ function PlayerView({ entity }: { entity: Entity }) {
         <primitive object={model} position={modelOffset} />
         {rightArmJoint &&
           heldItem &&
-          createPortal(<ItemView item={heldItem} display="thirdPerson" />, rightArmJoint)}
+          createPortal(<ItemView item={heldItem} display="thirdPerson" />, rightArmJoint, {
+            injectScene: false,
+          })}
       </group>
       <BoxColliderDebug entity={entity} />
     </>
@@ -76,50 +78,53 @@ function useCharacterAnimation(entity: Entity, animations: AnimationClip[], mode
   );
   const { actions } = useAnimations(clips, model);
 
-  useFrame((_, delta) => {
-    const idleAction = actions.still_test;
-    const walkAction = actions.walking_test;
-    const ridingAction = actions.riding;
-    if (!idleAction || !walkAction || !ridingAction) return;
+  useFrame(
+    (_, delta) => {
+      const idleAction = actions.still_test;
+      const walkAction = actions.walking_test;
+      const ridingAction = actions.riding;
+      if (!idleAction || !walkAction || !ridingAction) return;
 
-    const nextAction = entity.has(IsRiding)
-      ? ridingAction
-      : entity.has(IsWalking)
-        ? walkAction
-        : idleAction;
-    const locomotionActions = [idleAction, walkAction, ridingAction];
+      const nextAction = entity.has(IsRiding)
+        ? ridingAction
+        : entity.has(IsWalking)
+          ? walkAction
+          : idleAction;
+      const locomotionActions = [idleAction, walkAction, ridingAction];
 
-    // Keep every clip scheduled so a transition never exposes its default full weight.
-    if (locomotionActions.some((action) => !action.isScheduled())) {
-      for (const action of locomotionActions) {
-        action
-          .reset()
-          .setEffectiveWeight(action === nextAction ? 1 : 0)
-          .play();
+      // Keep every clip scheduled so a transition never exposes its default full weight.
+      if (locomotionActions.some((action) => !action.isScheduled())) {
+        for (const action of locomotionActions) {
+          action
+            .reset()
+            .setEffectiveWeight(action === nextAction ? 1 : 0)
+            .play();
+        }
+      } else {
+        const blendStep = delta / 0.15;
+        for (const action of locomotionActions) {
+          const target = action === nextAction ? 1 : 0;
+          const weight = action.getEffectiveWeight();
+          if (weight === target) continue;
+
+          action.setEffectiveWeight(
+            weight < target
+              ? Math.min(weight + blendStep, target)
+              : Math.max(weight - blendStep, target)
+          );
+        }
       }
-    } else {
-      const blendStep = delta / 0.15;
-      for (const action of locomotionActions) {
-        const target = action === nextAction ? 1 : 0;
-        const weight = action.getEffectiveWeight();
-        if (weight === target) continue;
 
-        action.setEffectiveWeight(
-          weight < target
-            ? Math.min(weight + blendStep, target)
-            : Math.max(weight - blendStep, target)
-        );
-      }
-    }
+      const velocity = entity.get(Velocity);
+      if (!velocity) return;
 
-    const velocity = entity.get(Velocity);
-    if (!velocity) return;
-
-    const horizontalSpeed = Math.hypot(velocity.x, velocity.z);
-    const cyclesPerSecond = horizontalSpeed / 2;
-    const timeScale = cyclesPerSecond * walkAction.getClip().duration;
-    walkAction.timeScale = Math.min(Math.max(timeScale, 1), 8);
-  }, -1);
+      const horizontalSpeed = Math.hypot(velocity.x, velocity.z);
+      const cyclesPerSecond = horizontalSpeed / 2;
+      const timeScale = cyclesPerSecond * walkAction.getClip().duration;
+      walkAction.timeScale = Math.min(Math.max(timeScale, 1), 8);
+    },
+    { priority: -1 }
+  );
 
   useEffect(() => {
     const swingAction = actions.tool_swing;

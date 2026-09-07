@@ -11,8 +11,8 @@
     "format": "prettier --config .config/prettier.json --ignore-path .config/prettierignore --write ."
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.8",
-    "@react-three/fiber": "^9.7.0",
+    "@react-three/drei": "11.0.0-alpha.7",
+    "@react-three/fiber": "10.0.0-canary.c385e9f",
     "koota": "^0.6.6",
     "math": "1.0.0-canary-37519dcd-20260903",
     "react": "^19.2.8",

@@ -1,3 +1,4 @@
+import { useFrame } from '@react-three/fiber';
 import { useWorld } from 'koota/react';
 import { useEffect } from 'react';
 import { subscribeCameraControllerSwap } from './camera/systems';
@@ -24,7 +25,6 @@ import { updatePlayerInput } from './character/player/systems';
 import { updateMountInput, updateMounting, updateRiders } from './riding/systems';
 import { updateConstruction, updateReveal } from './terrain/systems';
 import { updateTime } from './time/systems';
-import { useAnimationFrame } from './utils/use-animation-frame';
 
 // The tick. Every domain's systems run here in one global order, since the order is a property of
 // the whole app and no domain can own it.
@@ -37,35 +37,38 @@ export function Frameloop() {
   useEffect(() => subscribeCameraControllerSwap(world), [world]);
   useEffect(() => subscribeToolSwing(world), [world]);
 
-  useAnimationFrame(() => {
-    updateTime(world);
-    updateToolSwing(world);
-    updateConstruction(world);
-    updateReveal(world);
+  useFrame(
+    () => {
+      updateTime(world);
+      updateToolSwing(world);
+      updateConstruction(world);
+      updateReveal(world);
 
-    updatePlayerInput(world);
-    updateWanderInput(world);
-    updateMountInput(world);
-    updateOrbitController(world);
-    updateFirstPersonController(world);
+      updatePlayerInput(world);
+      updateWanderInput(world);
+      updateMountInput(world);
+      updateOrbitController(world);
+      updateFirstPersonController(world);
 
-    updateCharacterController(world);
-    applyGravity(world);
+      updateCharacterController(world);
+      applyGravity(world);
 
-    moveEntity(world);
-    resolveBoxPlaneCollisions(world);
-    resolveBoxCollisions(world);
-    updateCharacterState(world);
-    updateMounting(world);
-    updateRiders(world);
+      moveEntity(world);
+      resolveBoxPlaneCollisions(world);
+      resolveBoxCollisions(world);
+      updateCharacterState(world);
+      updateMounting(world);
+      updateRiders(world);
 
-    updateFollowTarget(world);
-    moveOrbit(world);
-    applyOrbit(world);
-    applyFirstPerson(world);
+      updateFollowTarget(world);
+      moveOrbit(world);
+      applyOrbit(world);
+      applyFirstPerson(world);
 
-    resetInputDelta(world);
-  });
+      resetInputDelta(world);
+    },
+    { before: 'update' }
+  );
 
   return null;
 }
