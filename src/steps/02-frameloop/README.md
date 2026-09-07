@@ -64,7 +64,7 @@ export function updateTime(world: World) {
 Create `frameloop.tsx`. The loop is a component so it can use Fiber's `useFrame`, but it renders nothing.
 
 ```tsx
-import { useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber/webgpu';
 import { useWorld } from 'koota/react';
 import { updateTime } from './time/systems';
 
@@ -90,10 +90,10 @@ Views also use `useFrame`, in the default `update` phase. Running the loop `befo
 In `app.tsx`, import the pieces.
 
 ```tsx
-import { Sky, useTexture } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Sky, useTexture } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react'; // <--
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping } from 'three/webgpu';
 import { Frameloop } from './frameloop'; // <--
 import { Time } from './time/traits'; // <--
 import { world } from './world'; // <--

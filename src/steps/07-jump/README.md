@@ -47,10 +47,10 @@ export const groundActions = createActions((world) => ({
 Create `ground/renderer.tsx`. It is the old `Ground` component, keyed to the entity and positioned from its trait.
 
 ```tsx
-import { useTexture } from '@react-three/drei';
+import { useTexture } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQueryFirst, useTrait } from 'koota/react';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping } from 'three/webgpu';
 import { Position } from '../transform/traits';
 import { Ground } from './traits';
 
@@ -91,8 +91,8 @@ export const actions = createActions((world) => ({
 In `app.tsx`, import `GroundRenderer`, use it in place of `<Ground />`, and delete the old `Ground` component along with the `useTexture` and `RepeatWrapping` imports.
 
 ```tsx
-import { Sky } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Sky } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react';
 import { CameraRenderer } from './camera/renderer';
 import { Frameloop } from './frameloop';

@@ -1,7 +1,7 @@
-import { Sky, useTexture } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Sky, useTexture } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping } from 'three/webgpu';
 import { Frameloop } from './frameloop';
 import { Time } from './time/traits';
 import { world } from './world';

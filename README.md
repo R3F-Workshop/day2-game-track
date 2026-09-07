@@ -1,6 +1,6 @@
 # A Minecraft-like game, step by step
 
-We are going to build a small Minecraft-like game from scratch: a world to walk around in, blocks to place and break, and pigs to keep you company. The only libraries are [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) and [Three.js](https://threejs.org/) for drawing, [drei](https://drei.docs.pmnd.rs/) for a few loaders and helpers, and [Koota](https://github.com/pmndrs/koota) for the game data.
+We are going to build a small Minecraft-like game from scratch: a world to walk around in, blocks to place and break, and pigs to keep you company. The only libraries are [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) and [Three.js](https://threejs.org/) for drawing with WebGPU, [drei](https://drei.docs.pmnd.rs/) for a few loaders and helpers, and [Koota](https://github.com/pmndrs/koota) for the game data.
 
 Start with [lesson 1](src/steps/01-stage/README.md) and edit the [src/game](src/game/) folder throughout all twelve lessons. Each guide shows every edit needed for the next step. The numbered folders in [src/steps](src/steps/) contain the completed examples.
 

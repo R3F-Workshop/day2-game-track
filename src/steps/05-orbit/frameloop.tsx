@@ -1,4 +1,4 @@
-import { useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber/webgpu';
 import { useWorld } from 'koota/react';
 import { applyOrbit, updateOrbitController } from './camera/systems';
 import { usePointer, useWheel } from './input/hooks';

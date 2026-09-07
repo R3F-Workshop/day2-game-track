@@ -1,9 +1,9 @@
-import { useAnimations, useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
+import { useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useQuery, useTag, useTrait } from 'koota/react';
 import { useEffect, useMemo } from 'react';
-import { Box3, MathUtils, Mesh, Vector3 } from 'three';
+import { Box3, MathUtils, Mesh, Vector3 } from 'three/webgpu';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { IsWalking } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';

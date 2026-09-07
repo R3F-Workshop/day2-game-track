@@ -1,5 +1,5 @@
-import { Sky } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Sky } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react';
 import { CameraRenderer } from './camera/renderer';
 import { Frameloop } from './frameloop';

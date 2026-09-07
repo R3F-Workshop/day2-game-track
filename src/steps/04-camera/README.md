@@ -75,7 +75,7 @@ spawnCamera({ position: [4, 3, 6], target: [0, 1, 0] }); // <--
 Create `camera/renderer.tsx`. It follows the same shape as the player renderer, but the view is a camera instead of a mesh.
 
 ```tsx
-import { PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQuery, useTrait } from 'koota/react';
 import { Position, Rotation } from '../transform/traits';

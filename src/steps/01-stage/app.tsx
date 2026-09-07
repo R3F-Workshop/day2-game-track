@@ -1,6 +1,6 @@
-import { Sky, useTexture } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { RepeatWrapping } from 'three';
+import { Sky, useTexture } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
+import { RepeatWrapping } from 'three/webgpu';
 
 export function App() {
   return (

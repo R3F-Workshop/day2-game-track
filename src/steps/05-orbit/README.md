@@ -232,7 +232,7 @@ spawnCamera({ target: [0, 1, 0] }); // <--
 In `frameloop.tsx`, attach the hooks and add the systems. The reset runs last so nothing misses this tick's input.
 
 ```tsx
-import { useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber/webgpu';
 import { useWorld } from 'koota/react';
 import { applyOrbit, updateOrbitController } from './camera/systems'; // <--
 import { usePointer, useWheel } from './input/hooks'; // <--

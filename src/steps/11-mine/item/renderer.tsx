@@ -1,6 +1,6 @@
-import { useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei/webgpu';
 import { useMemo } from 'react';
-import { Mesh } from 'three';
+import { Mesh } from 'three/webgpu';
 
 // Minecraft Diamond Axe by Blender3D, licensed CC BY 4.0
 // https://sketchfab.com/3d-models/minecraft-diamond-axe-0d62f4d3676545c88ec8523213c055dd

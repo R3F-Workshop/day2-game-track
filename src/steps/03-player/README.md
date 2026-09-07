@@ -15,7 +15,7 @@ import { Vector3 } from 'three';
 export const Position = trait(() => new Vector3());
 ```
 
-A trait can hold an object. The function makes a fresh `Vector3` for each entity so they never share one.
+A trait can hold an object. The function makes a fresh `Vector3` for each entity so they never share one. The simulation imports math from `three`, while views import from `three/webgpu`.
 
 Create `player/traits.ts`:
 

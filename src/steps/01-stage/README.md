@@ -9,9 +9,9 @@ Work directly in the [src/game](../../game/) folder. Its `app.tsx` is an empty C
 Replace the contents of `app.tsx` with a Canvas that has a sky, some fill light and a sun.
 
 ```tsx
-import { Sky, useTexture } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { RepeatWrapping } from 'three';
+import { Sky, useTexture } from '@react-three/drei/webgpu';
+import { Canvas } from '@react-three/fiber/webgpu';
+import { RepeatWrapping } from 'three/webgpu';
 
 export function App() {
   return (
@@ -27,7 +27,7 @@ export function App() {
 }
 ```
 
-`shadows` turns on shadow maps for the renderer. The camera starts a few units back and up, looking at the origin.
+Everything comes from the `webgpu` entries of Fiber and drei, which draw with WebGPU and fall back to WebGL where the browser lacks it. `shadows` turns on shadow maps for the renderer. The camera starts a few units back and up, looking at the origin.
 
 Add `Sun` below `App`.
 

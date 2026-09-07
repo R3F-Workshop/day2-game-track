@@ -127,9 +127,9 @@ Attach it, and tint the block by its damage.
 Create `item/renderer.tsx`. The axe hangs from the character's right arm, so it swings with the animation.
 
 ```tsx
-import { useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei/webgpu';
 import { useMemo } from 'react';
-import { Mesh } from 'three';
+import { Mesh } from 'three/webgpu';
 
 // Minecraft Diamond Axe by Blender3D, licensed CC BY 4.0
 // https://sketchfab.com/3d-models/minecraft-diamond-axe-0d62f4d3676545c88ec8523213c055dd
@@ -168,7 +168,7 @@ The axe has no skeleton, so a plain `clone` is enough. The numbers on the groups
 In `player/renderer.tsx`, add `createPortal`, `useWorld`, `AnimationUtils`, `LoopOnce` and the two item imports.
 
 ```tsx
-import { createPortal, useFrame } from '@react-three/fiber'; // <--
+import { createPortal, useFrame } from '@react-three/fiber/webgpu'; // <--
 import type { Entity } from 'koota';
 import { useQuery, useTag, useTrait, useWorld } from 'koota/react'; // <--
 import { useEffect, useMemo, useRef } from 'react';
@@ -182,7 +182,7 @@ import {
   Mesh,
   type Object3D,
   Vector3,
-} from 'three';
+} from 'three/webgpu';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { IsWalking } from '../character/traits';
 import { HeldAxe } from '../item/renderer'; // <--

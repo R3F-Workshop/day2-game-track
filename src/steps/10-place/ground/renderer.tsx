@@ -1,8 +1,8 @@
-import { useTexture } from '@react-three/drei';
-import type { ThreeEvent } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei/webgpu';
+import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useActions, useQueryFirst, useTrait } from 'koota/react';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping } from 'three/webgpu';
 import { blockActions } from '../block/actions';
 import { Position } from '../transform/traits';
 import { Ground } from './traits';

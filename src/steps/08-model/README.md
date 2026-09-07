@@ -70,11 +70,11 @@ Velocity,
 Replace `player/renderer.tsx`. The renderer's job is unchanged: one view per player, drawn from its traits.
 
 ```tsx
-import { useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQuery, useTrait } from 'koota/react';
 import { useEffect, useMemo } from 'react';
-import { Box3, Mesh, Vector3 } from 'three';
+import { Box3, Mesh, Vector3 } from 'three/webgpu';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { BoxCollider } from '../physics/traits';
 import { Position, Rotation } from '../transform/traits';
