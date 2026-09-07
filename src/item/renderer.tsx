@@ -1,9 +1,9 @@
-import { Clone, Hud, PerspectiveCamera, useGLTF } from '@react-three/drei/webgpu';
+import { Hud, PerspectiveCamera, useGLTF } from '@react-three/drei/webgpu';
 import { useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useQueryFirst, useTrait } from 'koota/react';
-import { useRef } from 'react';
-import { type Group, MathUtils, Quaternion, Vector3 } from 'three/webgpu';
+import { useMemo, useRef } from 'react';
+import { type Group, MathUtils, Mesh, Quaternion, Vector3 } from 'three/webgpu';
 import hammerUrl from '../assets/hammer.glb?url';
 import { FirstPersonBlock, ThirdPersonBlock } from '../block/renderer';
 import { Camera, Follows, IsFirstPerson } from '../camera/traits';
@@ -182,7 +182,16 @@ export function FirstPersonHammer() {
 
 function Hammer() {
   const { scene } = useGLTF(hammerUrl);
-  return <Clone object={scene} castShadow />;
+  // The loaded scene is shared, so each hand gets its own copy of the object tree.
+  const model = useMemo(() => {
+    const copy = scene.clone();
+    copy.traverse((object) => {
+      if (object instanceof Mesh) object.castShadow = true;
+    });
+    return copy;
+  }, [scene]);
+
+  return <primitive object={model} />;
 }
 
 useGLTF.preload(hammerUrl);
