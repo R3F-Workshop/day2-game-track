@@ -1,0 +1,98 @@
+# 1. Set the stage
+
+We start with a scene and nothing else. We'll build it the usual React Three Fiber way, everything in one component tree: a canvas, a sky, a sun, a ground and a capsule standing in for the player.
+
+Work directly in the [src/game](../../game/) folder. Its `app.tsx` is an empty Canvas. Make the following edits there and keep using this folder for every lesson. The files beside this guide contain the completed version.
+
+## 1. Sky and sun
+
+Replace the contents of `app.tsx` with a Canvas that has a sky, some fill light and a sun.
+
+```tsx
+import { Sky, useTexture } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { RepeatWrapping } from 'three';
+
+export function App() {
+  return (
+    <Canvas shadows camera={{ position: [4, 3, 6], fov: 45 }}>
+      <Sky sunPosition={[100, 20, 100]} />
+      <ambientLight intensity={0.3 * Math.PI} />
+      <Sun />
+
+      <Player />
+      <Ground />
+    </Canvas>
+  );
+}
+```
+
+`shadows` turns on shadow maps for the renderer. The camera starts a few units back and up, looking at the origin.
+
+Add `Sun` below `App`.
+
+```tsx
+// One directional light casts every shadow. Its shadow camera is a box around the origin, so
+// shadows fade out far from the middle of the stage.
+function Sun() {
+  return (
+    <directionalLight
+      castShadow
+      intensity={0.8 * Math.PI}
+      position={[100, 100, 100]}
+      shadow-mapSize={[2048, 2048]}
+      shadow-camera-left={-60}
+      shadow-camera-right={60}
+      shadow-camera-top={60}
+      shadow-camera-bottom={-60}
+      shadow-camera-near={10}
+      shadow-camera-far={400}
+      shadow-bias={-0.0005}
+    />
+  );
+}
+```
+
+Shadows only fall inside the light's shadow camera, a box 120 units across.
+
+## 2. Player and ground
+
+Until we have a model, a capsule stands in for the player. Add it below `Sun`.
+
+```tsx
+// A stand-in for the player, two units tall like a Minecraft character.
+function Player() {
+  return (
+    <mesh castShadow position={[0, 1, 0]}>
+      <capsuleGeometry args={[0.3, 1.4, 4, 16]} />
+      <meshStandardMaterial color="hotpink" />
+    </mesh>
+  );
+}
+```
+
+The capsule is 2 units tall, like a Minecraft character. Its center sits at `y = 1`, which puts its feet on the ground.
+
+The ground is a large plane turned flat. Add it below `Player`.
+
+```tsx
+function Ground() {
+  const texture = useTexture('/grass.jpg');
+  texture.wrapS = texture.wrapT = RepeatWrapping;
+
+  return (
+    <mesh receiveShadow rotation-x={-Math.PI / 2}>
+      <planeGeometry args={[1000, 1000]} />
+      <meshStandardMaterial map={texture} map-repeat={[240, 240]} color="green" />
+    </mesh>
+  );
+}
+```
+
+`useTexture` loads an image from the `public` folder. Repeating it 240 times across the plane keeps the grass small. A plane faces `+z`, so a quarter turn around `x` lays it flat.
+
+Run `pnpm dev` and open [your practice game](http://localhost:5173/). You should see a pink capsule on green grass under a blue sky, with a shadow. Move the capsule's `position` to see it and its shadow move.
+
+Everything so far is view. The capsule's position lives in a prop, and there is nowhere for gravity or input to put a value. From the next lesson on we move the data out of React and into a simulation, one concept at a time, until `src/game` looks like [the tree in the overview](../../../README.md#where-we-end-up).
+
+[Run the completed step](http://localhost:5173/?step=1) · [Next, the frame loop →](../02-frameloop/README.md)

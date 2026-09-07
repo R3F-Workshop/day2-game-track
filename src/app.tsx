@@ -1,154 +1,91 @@
-import { Sky } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useActions, useQueryFirst, useTrait, useWorld } from 'koota/react';
-import { useEffect, useRef } from 'react';
-import { type DirectionalLight, Vector3 } from 'three';
-import { actions } from './actions';
-import { Frameloop } from './frameloop';
-import { Block } from './block/traits';
-import { Construction } from './terrain/traits';
-import { FirstPersonController } from './controllers/firstPersonController';
-import { Follows, IsThirdPerson } from './camera/traits';
-import { OrbitController } from './controllers/orbitController';
-import { Keys } from './input/traits';
-import { Pig } from './character/pig/traits';
-import { Player } from './character/player/traits';
-import { Position } from './transform/traits';
-import { Time } from './time/traits';
+import { type ComponentType, lazy, Suspense } from 'react';
 
-import { BlockRenderer } from './block/renderer';
-import { CameraRenderer } from './camera/renderer';
-import { FirstPersonView } from './item/renderer';
-import { GroundRenderer } from './terrain/ground/renderer';
-import { PigRenderer } from './character/pig/renderer';
-import { PlayerRenderer } from './character/player/renderer';
+type StepModule = { App: ComponentType };
+
+// The practice game lives in src/game and every completed step in src/steps. Each folder is a
+// whole game with its own world, so only the chosen one is loaded.
+const Practice = lazy(() => import('./game/app').then(({ App }) => ({ default: App })));
+
+const steps = Object.entries(import.meta.glob<StepModule>('./steps/*/app.tsx'))
+  .map(([path, load]) => {
+    const [id, name] = path.split('/')[2].split('-', 2);
+    return {
+      id: String(Number(id)),
+      name,
+      Step: lazy(() => load().then(({ App }) => ({ default: App }))),
+    };
+  })
+  .sort((a, b) => Number(a.id) - Number(b.id));
 
 export function App() {
+  const id = new URLSearchParams(window.location.search).get('step');
+  const current = steps.find((step) => step.id === id);
+  const Current = current?.Step ?? Practice;
+
   return (
     <>
-      <Canvas shadows camera={{ fov: 45 }}>
-        <Sky sunPosition={[100, 20, 100]} />
-        <ambientLight intensity={0.3 * Math.PI} />
-        <Sun />
-
-        <PlayerRenderer />
-        <PigRenderer />
-        <GroundRenderer />
-        <BlockRenderer />
-        <CameraRenderer />
-        <FirstPersonView />
-      </Canvas>
-
-      <Frameloop />
-      <Startup />
-
-      {new URLSearchParams(window.location.search).has('debug') && (
-        <>
-          <Clock />
-          <KeysView />
-        </>
-      )}
+      <Suspense fallback={null}>
+        <Current />
+      </Suspense>
+      <nav
+        aria-label="Lessons"
+        style={{
+          position: 'fixed',
+          top: 16,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: 4,
+          maxWidth: 'calc(100% - 2rem)',
+          padding: 8,
+          borderRadius: 16,
+          background: 'rgba(0, 0, 0, 0.6)',
+          color: 'white',
+          fontSize: 12,
+        }}
+      >
+        <StepLink href="./" label="game" active={!current} title="Your practice game" />
+        {steps.map((step) => (
+          <StepLink
+            key={step.id}
+            href={`?step=${step.id}`}
+            label={step.id}
+            active={step === current}
+            title={step.name}
+          />
+        ))}
+      </nav>
     </>
   );
 }
 
-// Where the sun sits relative to the player.
-const SUN_OFFSET = new Vector3(100, 100, 100);
-// Half-width of the square the sun casts shadows into, enough to cover a generated world.
-const SHADOW_EXTENT = 72;
-
-// A directional light needs one shadow pass where a point light needs six, which matters once a
-// world of blocks is casting. It follows the player so the shadow area covers wherever they are.
-function Sun() {
-  const light = useRef<DirectionalLight>(null);
-  const player = useQueryFirst(Player, Position);
-
-  useFrame(() => {
-    const sun = light.current;
-    const center = player?.get(Position);
-    if (!sun || !center) return;
-
-    sun.position.copy(center).add(SUN_OFFSET);
-    sun.target.position.copy(center);
-    sun.target.updateMatrixWorld();
-  });
-
+function StepLink({
+  href,
+  label,
+  active,
+  title,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  title: string;
+}) {
   return (
-    <directionalLight
-      ref={light}
-      castShadow
-      intensity={0.8 * Math.PI}
-      position={SUN_OFFSET}
-      shadow-mapSize={[2048, 2048]}
-      shadow-camera-left={-SHADOW_EXTENT}
-      shadow-camera-right={SHADOW_EXTENT}
-      shadow-camera-top={SHADOW_EXTENT}
-      shadow-camera-bottom={-SHADOW_EXTENT}
-      shadow-camera-near={10}
-      shadow-camera-far={400}
-      shadow-bias={-0.0005}
-    />
-  );
-}
-
-function Startup() {
-  const world = useWorld();
-  const { spawnPlayer, spawnGround, spawnBlockAt, spawnCamera, spawnItem, giveItem, selectItem } =
-    useActions(actions);
-
-  useEffect(() => {
-    const player = spawnPlayer({ position: [0, 10, 0] });
-    // Hotbar order: 1 is a block, 2 is the hammer. The first slot starts in hand.
-    const items = [spawnItem('block'), spawnItem('hammer')];
-    items.forEach((item) => giveItem(player, item));
-    selectItem(player, 'block');
-    const ground = spawnGround();
-    spawnBlockAt(new Vector3(0, 0.5, -5));
-    const camera = spawnCamera();
-    camera.add(
-      OrbitController({ damping: 8 }),
-      FirstPersonController,
-      IsThirdPerson,
-      Follows(player)
-    );
-
-    return () => {
-      items.forEach((item) => item.destroy());
-      player.destroy();
-      ground.destroy();
-      world.set(Construction, { pending: [], doomed: [], nextPending: 0, nextDoomed: 0, elapsed: 0 });
-      Array.from(world.query(Block)).forEach((block) => block.destroy());
-      Array.from(world.query(Pig)).forEach((pig) => pig.destroy());
-      camera.destroy();
-    };
-  }, [giveItem, selectItem, spawnBlockAt, spawnCamera, spawnGround, spawnItem, spawnPlayer, world]);
-
-  return null;
-}
-
-function Clock() {
-  const world = useWorld();
-  const time = useTrait(world, Time);
-
-  if (!time) return null;
-
-  return (
-    <div style={{ position: 'absolute', top: 0, left: 0, color: 'white' }}>
-      <div>Current Time: {time.current.toFixed(2)} s</div>
-      <div>Delta Time: {(time.delta * 1000).toFixed(4)} ms</div>
-    </div>
-  );
-}
-
-function KeysView() {
-  const world = useWorld();
-  const keys = useTrait(world, Keys);
-
-  if (!keys) return null;
-
-  return (
-    <div style={{ position: 'absolute', top: 50, left: 0, color: 'white' }}>
-      <div>Pressed Keys: {Array.from(keys).join(', ')}</div>
-    </div>
+    <a
+      href={href}
+      title={title}
+      aria-current={active ? 'step' : undefined}
+      style={{
+        padding: '8px 12px',
+        borderRadius: 8,
+        color: active ? 'black' : 'white',
+        background: active ? 'white' : 'transparent',
+        textDecoration: 'none',
+      }}
+    >
+      {label}
+    </a>
   );
 }
