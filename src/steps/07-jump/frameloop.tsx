@@ -7,6 +7,7 @@ import { useKeyboard, usePointer, useWheel } from './input/hooks';
 import { resetInputDelta } from './input/systems';
 import { updatePlayerInput } from './player/systems';
 import { updateTime } from './time/systems';
+import { syncTransforms } from './view/systems';
 
 // The tick. Every system runs here, in one order, before the views read the world.
 export function Frameloop() {
@@ -28,6 +29,8 @@ export function Frameloop() {
       applyOrbit(world);
 
       resetInputDelta(world);
+
+      syncTransforms(world);
     },
     { before: 'update' }
   );

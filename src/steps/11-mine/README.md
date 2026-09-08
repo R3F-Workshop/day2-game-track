@@ -80,11 +80,13 @@ import { playerActions } from './player/actions';
 
 ## 3. Hit on click
 
-In `block/renderer.tsx`, import the item actions and the damage trait.
+In `block/renderer.tsx`, add `useTrait` to the Koota hooks, then import the item actions and damage trait.
 
 ```tsx
+import { useActions, useQuery, useTrait } from 'koota/react'; // <--
 import { itemActions } from '../item/actions'; // <--
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block, BlockDamage } from './traits'; // <--
 ```
@@ -94,7 +96,6 @@ Inside `BlockView`, read the action and the damage, and add a handler for the le
 ```tsx
 const { placeBlock } = useActions(blockActions);
 const { hitBlock } = useActions(itemActions); // <--
-const position = useTrait(entity, Position);
 const damage = useTrait(entity, BlockDamage); // <--
 const texture = useTexture('/dirt.jpg');
 // Darkens as the block takes hits.
@@ -115,7 +116,7 @@ Attach it, and tint the block by its damage.
 <mesh
   castShadow
   receiveShadow
-  position={position?.toArray()}
+  ref={captureRef(entity)}
   onPointerDown={handleHit}
   onContextMenu={handlePlace}
 >
@@ -173,9 +174,9 @@ In `player/renderer.tsx`, add `createPortal`, `useWorld`, `AnimationUtils`, `Loo
 
 ```tsx
 import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
-import { createPortal, useFrame } from '@react-three/fiber/webgpu'; // <--
+import { createPortal, useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useQuery, useTag, useTrait, useTraitEffect, useWorld } from 'koota/react'; // <--
+import { useQuery, useTag, useTrait, useWorld } from 'koota/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
@@ -183,7 +184,6 @@ import {
   type AnimationClip,
   AnimationUtils,
   Box3,
-  type Group,
   LoopOnce,
   MathUtils,
   Mesh,
@@ -191,24 +191,22 @@ import {
   Vector3,
 } from 'three/webgpu';
 import { IsWalking } from '../character/traits';
-import { HeldAxe } from '../item/renderer'; // <--
-import { ToolSwing } from '../item/traits'; // <--
+import { HeldAxe } from '../item/renderer';
+import { ToolSwing } from '../item/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 ```
 
-Inside `PlayerView`, find the arm bone and portal the axe into it.
+Inside `PlayerView`, find the arm bone before calling `useCharacterAnimation`, then portal the axe into it. Keep capturing the outer group so the model and axe move together.
 
 ```tsx
-useTraitEffect(entity, Rotation, (rotation) => {
-  if (rotation) group.current?.quaternion.copy(rotation);
-});
 const rightArm = useMemo(() => model.getObjectByName('RightArm'), [model]); // <--
 ```
 
 ```tsx
-<group ref={group}>
+<group ref={captureRef(entity)}>
   <primitive object={model} position={modelOffset} />
   {rightArm && createPortal(<HeldAxe />, rightArm, { injectScene: false })}
 </group>

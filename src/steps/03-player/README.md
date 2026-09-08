@@ -73,16 +73,55 @@ spawnPlayer({ position: [0, 1, 0] }); // <--
 if (import.meta.hot) import.meta.hot.dispose(() => world.destroy());
 ```
 
-## 3. Render from a query
+## 3. Capture the mounted object
+
+The entity holds game data. React creates the mesh. A `Ref` trait connects the two so a view system can copy the data into the mesh each frame.
+
+Create `view/traits.ts`:
+
+```ts
+import { trait } from 'koota';
+import type { Object3D } from 'three/webgpu';
+
+// The mounted Three object for an entity. Only the view uses this trait.
+export const Ref = trait((): Object3D | null => null);
+```
+
+Create `view/capture-ref.ts`. React calls this callback with the Three object when it mounts, then calls the returned cleanup when it detaches.
+
+```ts
+import type { Entity } from 'koota';
+import type { Object3D } from 'three/webgpu';
+import { Ref } from './traits';
+
+// Capture the mounted object and release it when React detaches the ref.
+export function captureRef(entity: Entity) {
+  return (object: Object3D | null) => {
+    if (!object || !entity.isAlive()) return;
+
+    if (entity.has(Ref)) entity.set(Ref, object);
+    else entity.add(Ref(object));
+
+    return () => {
+      if (entity.isAlive() && entity.get(Ref) === object) entity.remove(Ref);
+    };
+  };
+}
+```
+
+Each entity has one captured object. The cleanup checks that the entity is still alive because the simulation can destroy it before React unmounts its view. It also checks the object so an old cleanup cannot clear a newer ref.
+
+`Ref` belongs to the view. Spawn actions and simulation systems never need it, so the game can still run without React or a scene.
+
+## 4. Render from a query
 
 Create `player/renderer.tsx`. A **query** finds every entity that has a set of traits.
 
 ```tsx
 import type { Entity } from 'koota';
-import { useQuery, useTraitEffect } from 'koota/react';
-import { useRef } from 'react';
-import type { Mesh } from 'three/webgpu';
+import { useQuery } from 'koota/react';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 
 export function PlayerRenderer() {
@@ -92,13 +131,8 @@ export function PlayerRenderer() {
 
 // A stand-in for the player, two units tall like a Minecraft character.
 function PlayerView({ entity }: { entity: Entity }) {
-  const mesh = useRef<Mesh>(null);
-  useTraitEffect(entity, Position, (position) => {
-    if (position) mesh.current?.position.copy(position);
-  });
-
   return (
-    <mesh ref={mesh} castShadow>
+    <mesh ref={captureRef(entity)} castShadow>
       <capsuleGeometry args={[0.3, 1.4, 4, 16]} />
       <meshStandardMaterial color="hotpink" />
     </mesh>
@@ -106,9 +140,7 @@ function PlayerView({ entity }: { entity: Entity }) {
 }
 ```
 
-`useQuery` subscribes to which entities match, so a player that spawns or dies appears or disappears. Each `PlayerView` subscribes to its own `Position` with `useTraitEffect`, which calls back whenever the value changes, and copies it straight into the mesh through a ref.
-
-`Position` is one `Vector3` that systems will mutate in place every tick. Copying it into the Three object skips React entirely: no state, no render, just the mesh moving. That matters twice over. React only notices a change when it is handed a new value, and the React Compiler caches anything derived from a value until it is replaced, so a live object changing underneath a prop would freeze on screen. This is the pattern for every renderer from here on: a query for the entities, a view per entity, and a ref for whatever moves.
+`useQuery` keeps the list of views up to date as entities spawn and disappear. `ref={captureRef(entity)}` attaches the mesh to its entity. Query for the game traits, not `Ref`: the ref only exists after the view mounts.
 
 In `app.tsx`, import the renderer and add it inside the Canvas after `<Sun />`.
 
@@ -124,6 +156,50 @@ import { Time } from './time/traits';
 <PlayerRenderer /> {/* <-- */}
 <Ground />
 ```
+
+## 5. Sync before drawing
+
+Create `view/systems.ts`. `readEach` reads the simulation's position and copies it into the captured object. Only the object changes.
+
+```ts
+import type { World } from 'koota';
+import { Position } from '../transform/traits';
+import { Ref } from './traits';
+
+// Copy simulation transforms into mounted objects before rendering.
+export function syncTransforms(world: World) {
+  world.query(Position, Ref).readEach(([position, object]) => {
+    object?.position.copy(position);
+  });
+}
+```
+
+In `frameloop.tsx`, import and run it after the simulation systems:
+
+```tsx
+import { useFrame } from '@react-three/fiber/webgpu';
+import { useWorld } from 'koota/react';
+import { updateTime } from './time/systems';
+import { syncTransforms } from './view/systems';
+
+// The tick. Every system runs here, in one order, before the views read the world.
+export function Frameloop() {
+  const world = useWorld();
+
+  useFrame(
+    () => {
+      updateTime(world);
+
+      syncTransforms(world);
+    },
+    { before: 'update' }
+  );
+
+  return null;
+}
+```
+
+This runs every frame, so even an in-place change to the position reaches the mesh. Movement does not need a React render or a trait subscription. Entities without a mounted view are skipped.
 
 ## Try it
 

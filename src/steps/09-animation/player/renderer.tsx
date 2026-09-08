@@ -1,14 +1,13 @@
 import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
 import { useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useQuery, useTag, useTrait, useTraitEffect } from 'koota/react';
+import { useQuery, useTag, useTrait } from 'koota/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
   type AnimationAction,
   type AnimationClip,
   Box3,
-  type Group,
   MathUtils,
   Mesh,
   type Object3D,
@@ -16,7 +15,8 @@ import {
 } from 'three/webgpu';
 import { IsWalking } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 
 // Minecraft idle and walking animation by fabizok, licensed CC BY 4.0
@@ -43,14 +43,6 @@ function PlayerView({ entity }: { entity: Entity }) {
     return [-center.x, -bounds.min.y - (box?.size.y ?? 0) / 2, -center.z] as const;
   }, [box, model]);
 
-  const group = useRef<Group>(null);
-  useTraitEffect(entity, Position, (position) => {
-    if (position) group.current?.position.copy(position);
-  });
-  useTraitEffect(entity, Rotation, (rotation) => {
-    if (rotation) group.current?.quaternion.copy(rotation);
-  });
-
   useCharacterAnimation(entity, animations, model);
 
   useEffect(() => {
@@ -63,7 +55,7 @@ function PlayerView({ entity }: { entity: Entity }) {
   }, [model]);
 
   return (
-    <group ref={group}>
+    <group ref={captureRef(entity)}>
       <primitive object={model} position={modelOffset} />
     </group>
   );

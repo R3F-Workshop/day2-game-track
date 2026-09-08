@@ -4,6 +4,7 @@ import type { Entity } from 'koota';
 import { useActions, useQuery, useTrait } from 'koota/react';
 import { itemActions } from '../item/actions';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block, BlockDamage } from './traits';
 
@@ -15,7 +16,6 @@ export function BlockRenderer() {
 function BlockView({ entity }: { entity: Entity }) {
   const { placeBlock } = useActions(blockActions);
   const { hitBlock } = useActions(itemActions);
-  const position = useTrait(entity, Position);
   const damage = useTrait(entity, BlockDamage);
   const texture = useTexture('/dirt.jpg');
   // Darkens as the block takes hits.
@@ -40,7 +40,7 @@ function BlockView({ entity }: { entity: Entity }) {
     <mesh
       castShadow
       receiveShadow
-      position={position?.toArray()}
+      ref={captureRef(entity)}
       onPointerDown={handleHit}
       onContextMenu={handlePlace}
     >

@@ -1,10 +1,11 @@
 import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useActions, useQueryFirst, useTrait } from 'koota/react';
+import { useActions, useQueryFirst } from 'koota/react';
 import { RepeatWrapping } from 'three/webgpu';
 import { blockActions } from '../block/actions';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Ground } from './traits';
 
 export function GroundRenderer() {
@@ -16,7 +17,6 @@ function GroundView({ entity }: { entity: Entity }) {
   const { placeBlock } = useActions(blockActions);
   const texture = useTexture('/grass.jpg');
   texture.wrapS = texture.wrapT = RepeatWrapping;
-  const position = useTrait(entity, Position);
 
   // Right click places a block on the ground under the pointer.
   const handlePlace = (event: ThreeEvent<MouseEvent>) => {
@@ -28,7 +28,7 @@ function GroundView({ entity }: { entity: Entity }) {
   return (
     <mesh
       receiveShadow
-      position={position?.toArray()}
+      ref={captureRef(entity)}
       rotation-x={-Math.PI / 2}
       onContextMenu={handlePlace}
     >

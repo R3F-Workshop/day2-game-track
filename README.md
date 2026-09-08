@@ -23,13 +23,17 @@ Koota stores the simulation's data. Each lesson introduces these terms when it n
 | **System** | A function that queries entities and updates their traits, once per tick |
 | **Action** | A function bound to a world that changes it, like spawning a player      |
 
-The **frame loop** runs the systems in order each tick. They read input, move characters, resolve collisions and update the camera. The view then draws the result.
+The **frame loop** runs the systems in order each tick. They read input, move characters, resolve collisions and update the camera. Finally, `syncTransforms` copies positions and rotations into the mounted Three objects before the view draws them.
+
+Each renderer captures its Three object with `ref={captureRef(entity)}`. This adds a `Ref` trait while the object is mounted and removes it on unmount. The view sync system reads `Ref`, `Position` and `Rotation` each frame, so movement needs no React render or transform subscription. Simulation systems never read `Ref` and can run headless.
+
+Run `node --test tests/view-sync.test.mjs` to check transform syncing and ref cleanup across the completed lessons without a browser.
 
 ## Lessons
 
 1. [Stage](src/steps/01-stage/README.md) draws a ground and a sky the usual React Three Fiber way.
 2. [Frame loop](src/steps/02-frameloop/README.md) creates the world, a `Time` trait, the first system and a clock on screen.
-3. [Player](src/steps/03-player/README.md) spawns a player entity and draws it from a query.
+3. [Player](src/steps/03-player/README.md) spawns a player entity, captures its mesh ref and syncs its position each frame.
 4. [Camera](src/steps/04-camera/README.md) makes the camera an entity too.
 5. [Orbit](src/steps/05-orbit/README.md) reads the pointer and wheel and orbits the camera.
 6. [Controller](src/steps/06-controller/README.md) reads the keyboard, moves the player and has the camera follow.
@@ -53,6 +57,7 @@ src/game
 ├── time              Time
 ├── input             Keys, Pointer, Wheel and the hooks that fill them
 ├── transform         Position, Rotation
+├── view              Ref, captureRef, syncTransforms
 ├── physics           Velocity, colliders, IsGrounded
 ├── camera            Camera, Follows, OrbitController
 ├── character         CharacterController, Input and the states

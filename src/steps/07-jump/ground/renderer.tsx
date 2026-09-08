@@ -1,8 +1,9 @@
 import { useTexture } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
-import { useQueryFirst, useTrait } from 'koota/react';
+import { useQueryFirst } from 'koota/react';
 import { RepeatWrapping } from 'three/webgpu';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Ground } from './traits';
 
 export function GroundRenderer() {
@@ -13,10 +14,9 @@ export function GroundRenderer() {
 function GroundView({ entity }: { entity: Entity }) {
   const texture = useTexture('/grass.jpg');
   texture.wrapS = texture.wrapT = RepeatWrapping;
-  const position = useTrait(entity, Position);
 
   return (
-    <mesh receiveShadow position={position?.toArray()} rotation-x={-Math.PI / 2}>
+    <mesh receiveShadow ref={captureRef(entity)} rotation-x={-Math.PI / 2}>
       <planeGeometry args={[1000, 1000]} />
       <meshStandardMaterial map={texture} map-repeat={[240, 240]} color="green" />
     </mesh>

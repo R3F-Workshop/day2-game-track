@@ -77,10 +77,9 @@ Create `camera/renderer.tsx`. It follows the same shape as the player renderer, 
 ```tsx
 import { PerspectiveCamera } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
-import { useQuery, useTraitEffect } from 'koota/react';
-import { useRef } from 'react';
-import type { PerspectiveCamera as CameraObject } from 'three/webgpu';
+import { useQuery } from 'koota/react';
 import { Position, Rotation } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Camera } from './traits';
 
 export function CameraRenderer() {
@@ -89,19 +88,32 @@ export function CameraRenderer() {
 }
 
 function CameraView({ entity }: { entity: Entity }) {
-  const camera = useRef<CameraObject>(null);
-  useTraitEffect(entity, Position, (position) => {
-    if (position) camera.current?.position.copy(position);
-  });
-  useTraitEffect(entity, Rotation, (rotation) => {
-    if (rotation) camera.current?.quaternion.copy(rotation);
-  });
-
-  return <PerspectiveCamera ref={camera} makeDefault fov={70} />;
+  return <PerspectiveCamera ref={captureRef(entity)} makeDefault fov={70} />;
 }
 ```
 
-`makeDefault` tells Fiber to draw the scene through this camera. The field of view is wider than the Canvas default, closer to Minecraft's. Position and rotation are copied into the camera through a ref, the same way the player's position reaches its mesh. The ref type is Three's `PerspectiveCamera`, renamed so it does not clash with drei's component.
+`makeDefault` tells Fiber to draw through this camera. It uses the same ref capture as the player, with a wider field of view.
+
+Extend `view/systems.ts` to copy rotations too:
+
+```ts
+import type { World } from 'koota';
+import { Position, Rotation } from '../transform/traits';
+import { Ref } from './traits';
+
+// Copy simulation transforms into mounted objects before rendering.
+export function syncTransforms(world: World) {
+  world.query(Position, Ref).readEach(([position, object]) => {
+    object?.position.copy(position);
+  });
+
+  world.query(Rotation, Ref).readEach(([rotation, object]) => {
+    object?.quaternion.copy(rotation);
+  });
+}
+```
+
+Separate queries let the capsule keep using only `Position`, while the camera also uses `Rotation`. The existing frame loop call now syncs both. The simulation still owns the transforms.
 
 In `app.tsx`, import the renderer, drop the `camera` prop from the Canvas, and add the renderer to the scene.
 

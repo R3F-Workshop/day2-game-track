@@ -110,14 +110,15 @@ export const actions = createActions((world) => ({
 
 ## 3. Render and click
 
-Create `block/renderer.tsx`. A block is a textured cube that answers a right click.
+Create `block/renderer.tsx`. A block is a textured cube that answers a right click. Capture its mesh so the same sync system positions it on the grid.
 
 ```tsx
 import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useActions, useQuery, useTrait } from 'koota/react';
+import { useActions, useQuery } from 'koota/react';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block } from './traits';
 
@@ -128,7 +129,6 @@ export function BlockRenderer() {
 
 function BlockView({ entity }: { entity: Entity }) {
   const { placeBlock } = useActions(blockActions);
-  const position = useTrait(entity, Position);
   const texture = useTexture('/dirt.jpg');
 
   // Right click places a block against the face under the pointer.
@@ -139,7 +139,7 @@ function BlockView({ entity }: { entity: Entity }) {
   };
 
   return (
-    <mesh castShadow receiveShadow position={position?.toArray()} onContextMenu={handlePlace}>
+    <mesh castShadow receiveShadow ref={captureRef(entity)} onContextMenu={handlePlace}>
       <boxGeometry />
       <meshStandardMaterial map={texture} />
     </mesh>
@@ -157,7 +157,7 @@ The ground takes the same click. In `ground/renderer.tsx`, import the pieces.
 import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu'; // <--
 import type { Entity } from 'koota';
-import { useActions, useQueryFirst, useTrait } from 'koota/react'; // <--
+import { useActions, useQueryFirst } from 'koota/react'; // <--
 import { RepeatWrapping } from 'three/webgpu';
 import { blockActions } from '../block/actions'; // <--
 ```
@@ -183,7 +183,7 @@ Attach it to the mesh.
 ```tsx
 <mesh
   receiveShadow
-  position={position?.toArray()}
+  ref={captureRef(entity)}
   rotation-x={-Math.PI / 2}
   onContextMenu={handlePlace}
 >

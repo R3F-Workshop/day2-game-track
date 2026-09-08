@@ -210,7 +210,7 @@ export function applyOrbit(world: World) {
 }
 ```
 
-`updateEach` provides the matching traits, writes changes back and detects changes for subscribers such as `useTrait`. The look-at math from lesson 4 now runs every tick.
+`updateEach` writes the calculated transforms back to the world. `syncTransforms` then copies them into the captured camera. The look-at math from lesson 4 now runs every tick.
 
 ## 5. Wire it up
 
@@ -231,30 +231,33 @@ spawnCamera({ target: [0, 1, 0] }); // <--
 if (import.meta.hot) import.meta.hot.dispose(() => world.destroy());
 ```
 
-In `frameloop.tsx`, attach the hooks and add the systems. The reset runs last so nothing misses this tick's input.
+In `frameloop.tsx`, attach the hooks and add the systems. Reset the input after all simulation systems have read it, then sync the views.
 
 ```tsx
 import { useFrame } from '@react-three/fiber/webgpu';
 import { useWorld } from 'koota/react';
-import { applyOrbit, updateOrbitController } from './camera/systems'; // <--
-import { usePointer, useWheel } from './input/hooks'; // <--
-import { resetInputDelta } from './input/systems'; // <--
+import { applyOrbit, updateOrbitController } from './camera/systems';
+import { usePointer, useWheel } from './input/hooks';
+import { resetInputDelta } from './input/systems';
 import { updateTime } from './time/systems';
+import { syncTransforms } from './view/systems';
 
 // The tick. Every system runs here, in one order, before the views read the world.
 export function Frameloop() {
   const world = useWorld();
-  usePointer(world); // <--
-  useWheel(world); // <--
+  usePointer(world);
+  useWheel(world);
 
   useFrame(
     () => {
       updateTime(world);
 
-      updateOrbitController(world); // <--
-      applyOrbit(world); // <--
+      updateOrbitController(world);
+      applyOrbit(world);
 
-      resetInputDelta(world); // <--
+      resetInputDelta(world);
+
+      syncTransforms(world);
     },
     { before: 'update' }
   );

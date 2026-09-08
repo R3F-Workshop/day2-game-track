@@ -272,6 +272,7 @@ updateOrbitController(world);
 applyOrbit(world);
 
 resetInputDelta(world);
+syncTransforms(world);
 ```
 
 ## Try it

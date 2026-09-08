@@ -72,12 +72,13 @@ Replace `player/renderer.tsx`. The renderer's job is unchanged: one view per pla
 ```tsx
 import { useGLTF } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
-import { useQuery, useTrait, useTraitEffect } from 'koota/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useQuery, useTrait } from 'koota/react';
+import { useEffect, useMemo } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
-import { Box3, type Group, Mesh, Vector3 } from 'three/webgpu';
+import { Box3, Mesh, Vector3 } from 'three/webgpu';
 import { BoxCollider } from '../physics/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 
 // Minecraft idle and walking animation by fabizok, licensed CC BY 4.0
@@ -104,13 +105,6 @@ function PlayerView({ entity }: { entity: Entity }) {
     return [-center.x, -bounds.min.y - (box?.size.y ?? 0) / 2, -center.z] as const;
   }, [box, model]);
 
-  const group = useRef<Group>(null);
-  useTraitEffect(entity, Position, (position) => {
-    if (position) group.current?.position.copy(position);
-  });
-  useTraitEffect(entity, Rotation, (rotation) => {
-    if (rotation) group.current?.quaternion.copy(rotation);
-  });
 
   useEffect(() => {
     model.traverse((object) => {
@@ -122,7 +116,7 @@ function PlayerView({ entity }: { entity: Entity }) {
   }, [model]);
 
   return (
-    <group ref={group}>
+    <group ref={captureRef(entity)}>
       <primitive object={model} position={modelOffset} />
     </group>
   );
@@ -131,7 +125,7 @@ function PlayerView({ entity }: { entity: Entity }) {
 useGLTF.preload(MODEL_URL);
 ```
 
-`useGLTF` caches the file, so every view gets the same scene and has to copy it. A skinned mesh needs its skeleton copied along with it, which is what `SkeletonUtils.clone` does. The group carries the entity's transform and the model hangs inside it, offset so its feet sit at the bottom of the collider.
+`useGLTF` caches the file, so every view gets the same scene and has to copy it. A skinned mesh needs its skeleton copied along with it, which is what `SkeletonUtils.clone` does. Capture the outer group so `syncTransforms` applies the entity's position and rotation. The model sits inside it with a local offset that puts its feet at the bottom of the collider. The sync system leaves that offset alone.
 
 ## Try it
 

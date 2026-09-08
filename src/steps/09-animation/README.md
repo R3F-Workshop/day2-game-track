@@ -105,28 +105,28 @@ updateCharacterState(world); // <--
 
 ## 3. Play the matching clip
 
-In `player/renderer.tsx`, replace the imports with these. The new names are the animation types, `useTag`, `useFrame`, `MathUtils` and `Velocity`.
+In `player/renderer.tsx`, replace the imports with these. The new names are the animation types, `useTag`, `useRef`, `useFrame`, `MathUtils` and `Velocity`. Keep `captureRef` for the outer group.
 
 ```tsx
-import { useAnimations, useGLTF } from '@react-three/drei/webgpu'; // <--
-import { useFrame } from '@react-three/fiber/webgpu'; // <--
+import { useAnimations, useGLTF } from '@react-three/drei/webgpu';
+import { useFrame } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useQuery, useTag, useTrait, useTraitEffect } from 'koota/react'; // <--
+import { useQuery, useTag, useTrait } from 'koota/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
   type AnimationAction,
   type AnimationClip,
   Box3,
-  type Group,
   MathUtils,
   Mesh,
   type Object3D,
   Vector3,
 } from 'three/webgpu';
-import { IsWalking } from '../character/traits'; // <--
-import { BoxCollider, Velocity } from '../physics/traits'; // <--
-import { Position, Rotation } from '../transform/traits';
+import { IsWalking } from '../character/traits';
+import { BoxCollider, Velocity } from '../physics/traits';
+import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 ```
 
@@ -136,13 +136,9 @@ In `PlayerView`, replace the existing `useGLTF` line to also read the animation 
 const { scene, animations } = useGLTF(MODEL_URL);
 ```
 
-Call the animation hook after reading the position and rotation.
+Call the animation hook after calculating `modelOffset`.
 
 ```tsx
-useTraitEffect(entity, Rotation, (rotation) => {
-  if (rotation) group.current?.quaternion.copy(rotation);
-});
-
 useCharacterAnimation(entity, animations, model); // <--
 ```
 

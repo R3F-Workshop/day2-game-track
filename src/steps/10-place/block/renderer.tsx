@@ -1,8 +1,9 @@
 import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
-import { useActions, useQuery, useTrait } from 'koota/react';
+import { useActions, useQuery } from 'koota/react';
 import { Position } from '../transform/traits';
+import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block } from './traits';
 
@@ -13,7 +14,6 @@ export function BlockRenderer() {
 
 function BlockView({ entity }: { entity: Entity }) {
   const { placeBlock } = useActions(blockActions);
-  const position = useTrait(entity, Position);
   const texture = useTexture('/dirt.jpg');
 
   // Right click places a block against the face under the pointer.
@@ -24,7 +24,7 @@ function BlockView({ entity }: { entity: Entity }) {
   };
 
   return (
-    <mesh castShadow receiveShadow position={position?.toArray()} onContextMenu={handlePlace}>
+    <mesh castShadow receiveShadow ref={captureRef(entity)} onContextMenu={handlePlace}>
       <boxGeometry />
       <meshStandardMaterial map={texture} />
     </mesh>
