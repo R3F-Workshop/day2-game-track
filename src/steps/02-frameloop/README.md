@@ -95,6 +95,7 @@ In `app.tsx`, import the pieces.
 import { Sky, useTexture } from '@react-three/drei/webgpu';
 import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react'; // <--
+import { output, vec4 } from 'three/tsl';
 import { RepeatWrapping } from 'three/webgpu';
 import { Frameloop } from './frameloop'; // <--
 import { Time } from './time/traits'; // <--

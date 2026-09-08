@@ -1,6 +1,7 @@
 import { Sky } from '@react-three/drei/webgpu';
 import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react';
+import { output, vec4 } from 'three/tsl';
 import { CameraRenderer } from './camera/renderer';
 import { Frameloop } from './frameloop';
 import { GroundRenderer } from './ground/renderer';
@@ -12,7 +13,10 @@ export function App() {
   return (
     <WorldProvider world={world}>
       <Canvas shadows>
-        <Sky sunPosition={[100, 20, 100]} />
+        <Sky
+          sunPosition={[100, 20, 100]}
+          material-outputNode={vec4(output.rgb.pow(1 / 2.4), output.a)}
+        />
         <ambientLight intensity={0.3 * Math.PI} />
         <Sun />
 

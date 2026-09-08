@@ -94,6 +94,7 @@ In `app.tsx`, import `GroundRenderer`, use it in place of `<Ground />`, and dele
 import { Sky } from '@react-three/drei/webgpu';
 import { Canvas } from '@react-three/fiber/webgpu';
 import { useTrait, useWorld, WorldProvider } from 'koota/react';
+import { output, vec4 } from 'three/tsl';
 import { CameraRenderer } from './camera/renderer';
 import { Frameloop } from './frameloop';
 import { GroundRenderer } from './ground/renderer'; // <--

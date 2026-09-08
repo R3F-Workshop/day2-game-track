@@ -11,12 +11,16 @@ Replace the contents of `app.tsx` with a Canvas that has a sky, some fill light 
 ```tsx
 import { Sky, useTexture } from '@react-three/drei/webgpu';
 import { Canvas } from '@react-three/fiber/webgpu';
+import { output, vec4 } from 'three/tsl';
 import { RepeatWrapping } from 'three/webgpu';
 
 export function App() {
   return (
     <Canvas shadows camera={{ position: [4, 1.5, 6], fov: 45 }}>
-      <Sky sunPosition={[100, 20, 100]} />
+      <Sky
+        sunPosition={[100, 20, 100]}
+        material-outputNode={vec4(output.rgb.pow(1 / 2.4), output.a)}
+      />
       <ambientLight intensity={0.3 * Math.PI} />
       <Sun />
     </Canvas>
@@ -25,6 +29,8 @@ export function App() {
 ```
 
 Everything comes from the `webgpu` entries of Fiber and drei, which draw with WebGPU and fall back to WebGL where the browser lacks it. `shadows` enables shadows. The camera starts behind the origin at about eye height, looking toward it. Keeping it low keeps the horizon in view. `ambientLight` lights every surface, while `Sun` gives the light a direction.
+
+`material-outputNode` adjusts the sky's color with Three's shader nodes. The power curve lifts darker colors for a bright daytime sky without changing the scene's lighting.
 
 Add `Sun` below `App`.
 
