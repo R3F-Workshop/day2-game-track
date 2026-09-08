@@ -19,7 +19,7 @@ import { IsWalking } from '../character/traits';
 import { HeldAxe } from '../item/renderer';
 import { ToolSwing } from '../item/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 

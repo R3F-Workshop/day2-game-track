@@ -1,7 +1,7 @@
 import { createActions, type Entity } from 'koota';
 import { Vector3 } from 'three';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Block, BlockDamage } from './traits';
 
 export const blockActions = createActions((world) => {

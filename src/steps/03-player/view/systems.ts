@@ -1,5 +1,5 @@
 import type { World } from 'koota';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Ref } from './traits';
 
 // Copy simulation transforms into mounted objects before rendering.

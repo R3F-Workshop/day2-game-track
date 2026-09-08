@@ -46,7 +46,7 @@ Run `node --test tests/view-sync.test.mjs` to check transform syncing and ref cl
 
 ## Where we end up
 
-Each folder in `src/game` groups one part of the game. `traits.ts` defines its data, `actions.ts` provides operations such as spawning, `systems.ts` updates it each tick, and `renderer.tsx` draws it. React stays in the renderers, input hooks, app and frame loop.
+Shared position and rotation traits live in `src/game/transform.ts`. Each folder groups one part of the game. `traits.ts` defines its data, `actions.ts` provides operations such as spawning, `systems.ts` updates it each tick, and `renderer.tsx` draws it. React stays in the renderers, input hooks, app and frame loop.
 
 ```
 src/game
@@ -54,9 +54,9 @@ src/game
 ├── world.ts          creates the world and spawns the starting entities
 ├── frameloop.tsx     runs every system in order, once per tick
 ├── actions.ts        every domain's actions in one place
+├── transform.ts      Position, Rotation
 ├── time              Time
 ├── input             Keys, Pointer, Wheel and the hooks that fill them
-├── transform         Position, Rotation
 ├── view              Ref, captureRef, syncTransforms
 ├── physics           Velocity, colliders, IsGrounded
 ├── camera            Camera, Follows, OrbitController

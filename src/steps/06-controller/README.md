@@ -80,7 +80,7 @@ Create `character/systems.ts`. Acceleration moves velocity toward the requested 
 import type { World } from 'koota';
 import { Velocity } from '../physics/traits';
 import { Time } from '../time/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { CharacterController, Input } from './traits';
 
 export function updateCharacterController(world: World) {
@@ -159,7 +159,7 @@ import { Vector3 } from 'three';
 import { Camera, Follows } from '../camera/traits';
 import { Input } from '../character/traits';
 import { Keys } from '../input/traits';
-import { Rotation } from '../transform/traits';
+import { Rotation } from '../transform';
 import { Player } from './traits';
 
 const UP = new Vector3(0, 1, 0);
@@ -209,7 +209,7 @@ import { createActions } from 'koota';
 import { Vector3 } from 'three';
 import { CharacterController, Input } from '../character/traits'; // <--
 import { Velocity } from '../physics/traits'; // <--
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Player } from './traits';
 
 export const playerActions = createActions((world) => ({

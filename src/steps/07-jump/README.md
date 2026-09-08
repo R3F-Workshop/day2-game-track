@@ -34,7 +34,7 @@ Create `ground/actions.ts`:
 ```ts
 import { createActions } from 'koota';
 import { PlaneCollider } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Ground } from './traits';
 
 export const groundActions = createActions((world) => ({
@@ -51,7 +51,7 @@ import { useTexture } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQueryFirst } from 'koota/react';
 import { RepeatWrapping } from 'three/webgpu';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Ground } from './traits';
 
@@ -112,7 +112,7 @@ Create `physics/systems.ts`. Each tick, any box that sank below a floor gets lif
 
 ```ts
 import type { World } from 'koota';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { BoxCollider, IsGrounded, PlaneCollider, Velocity } from './traits';
 
 // Lifts every box that sank into a floor back on top of it, and marks it as standing.

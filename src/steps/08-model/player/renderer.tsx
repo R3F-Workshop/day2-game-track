@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { Box3, Mesh, Vector3 } from 'three/webgpu';
 import { BoxCollider } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 

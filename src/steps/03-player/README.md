@@ -6,7 +6,7 @@ Continue in `src/game` from [lesson 2](../02-frameloop/README.md).
 
 ## 1. Define the traits
 
-Create `transform/traits.ts`. Players, cameras and blocks will all need a position.
+Create `transform.ts`. Players, cameras and blocks will all need a position.
 
 ```ts
 import { trait } from 'koota';
@@ -34,7 +34,7 @@ Create `player/actions.ts`. An **action** is a function bound to a world that ch
 ```ts
 import { createActions } from 'koota';
 import { Vector3 } from 'three';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Player } from './traits';
 
 export const playerActions = createActions((world) => ({
@@ -120,7 +120,7 @@ Create `player/renderer.tsx`. A **query** finds every entity that has a set of t
 ```tsx
 import type { Entity } from 'koota';
 import { useQuery } from 'koota/react';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 
@@ -163,7 +163,7 @@ Create `view/systems.ts`. `readEach` reads the simulation's position and copies 
 
 ```ts
 import type { World } from 'koota';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Ref } from './traits';
 
 // Copy simulation transforms into mounted objects before rendering.

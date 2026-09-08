@@ -1,6 +1,6 @@
 import { createActions } from 'koota';
 import { Matrix4, Quaternion, Vector3 } from 'three';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Camera } from './traits';
 
 export const cameraActions = createActions((world) => ({

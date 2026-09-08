@@ -2,7 +2,7 @@ import type { World } from 'koota';
 import { Quaternion, Vector3 } from 'three';
 import { IsGrounded, Velocity } from '../physics/traits';
 import { Time } from '../time/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { CharacterController, Input } from './traits';
 
 const UP = new Vector3(0, 1, 0);

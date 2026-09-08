@@ -38,7 +38,7 @@ import { createActions } from 'koota';
 import { Vector3 } from 'three';
 import { CharacterController, Input, IsIdle } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Pig, Wander } from './traits';
 
 export const pigActions = createActions((world) => {
@@ -161,7 +161,7 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { Box3, MathUtils, Mesh, Vector3 } from 'three/webgpu';
 import { IsWalking } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Pig } from './traits';
 
@@ -256,7 +256,7 @@ In `world.ts`, spawn two next to the player.
 
 ```ts
 import { Time } from './time/traits';
-import { Position } from './transform/traits'; // <--
+import { Position } from './transform'; // <--
 ```
 
 ```ts
@@ -278,7 +278,7 @@ import type { World } from 'koota';
 import { useEffect } from 'react';
 import { actions } from '../actions'; // <--
 import { Player } from '../player/traits'; // <--
-import { Position } from '../transform/traits'; // <--
+import { Position } from '../transform'; // <--
 import { Keys, Pointer, Wheel } from './traits';
 ```
 

@@ -1,6 +1,6 @@
 import type { Entity } from 'koota';
 import { useQuery } from 'koota/react';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Player } from './traits';
 

@@ -1,7 +1,7 @@
 import { PerspectiveCamera } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQuery } from 'koota/react';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Camera } from './traits';
 

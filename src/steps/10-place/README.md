@@ -26,7 +26,7 @@ Blocks are one unit wide. Their centers use whole numbers on `x` and `z`, and ha
 import { createActions, type Entity } from 'koota';
 import { Vector3 } from 'three';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Block } from './traits';
 
 export const blockActions = createActions((world) => {
@@ -117,7 +117,7 @@ import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useActions, useQuery } from 'koota/react';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block } from './traits';
@@ -212,7 +212,7 @@ A block with a collider is only solid if a system says so. In `physics/systems.t
 ```ts
 import { Not, type World } from 'koota'; // <--
 import type { Vector3 } from 'three'; // <--
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { BoxCollider, IsGrounded, PlaneCollider, Velocity } from './traits';
 ```
 

@@ -6,7 +6,7 @@ Continue in `src/game` from [lesson 3](../03-player/README.md).
 
 ## 1. Add rotation
 
-A camera needs to face somewhere. In `transform/traits.ts`, add `Rotation` after `Position`.
+A camera needs to face somewhere. In `transform.ts`, add `Rotation` after `Position`.
 
 ```ts
 import { trait } from 'koota';
@@ -33,7 +33,7 @@ Create `camera/actions.ts`. The action takes a position and a point to look at, 
 ```ts
 import { createActions } from 'koota';
 import { Matrix4, Quaternion, Vector3 } from 'three';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Camera } from './traits';
 
 export const cameraActions = createActions((world) => ({
@@ -78,7 +78,7 @@ Create `camera/renderer.tsx`. It follows the same shape as the player renderer, 
 import { PerspectiveCamera } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQuery } from 'koota/react';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Camera } from './traits';
 
@@ -98,7 +98,7 @@ Extend `view/systems.ts` to copy rotations too:
 
 ```ts
 import type { World } from 'koota';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Ref } from './traits';
 
 // Copy simulation transforms into mounted objects before rendering.

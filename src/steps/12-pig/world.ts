@@ -4,7 +4,7 @@ import { actions } from './actions';
 import { Follows } from './camera/traits';
 import { Keys, Pointer, Wheel } from './input/traits';
 import { Time } from './time/traits';
-import { Position } from './transform/traits';
+import { Position } from './transform';
 
 export const world = createWorld(Time, Keys, Pointer, Wheel);
 

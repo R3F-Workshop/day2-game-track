@@ -2,7 +2,7 @@ import { useTexture } from '@react-three/drei/webgpu';
 import type { Entity } from 'koota';
 import { useQueryFirst } from 'koota/react';
 import { RepeatWrapping } from 'three/webgpu';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Ground } from './traits';
 

@@ -3,7 +3,7 @@ import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useActions, useQuery, useTrait } from 'koota/react';
 import { itemActions } from '../item/actions';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block, BlockDamage } from './traits';

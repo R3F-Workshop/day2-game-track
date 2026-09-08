@@ -2,7 +2,7 @@ import { useTexture } from '@react-three/drei/webgpu';
 import type { ThreeEvent } from '@react-three/fiber/webgpu';
 import type { Entity } from 'koota';
 import { useActions, useQuery } from 'koota/react';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { blockActions } from './actions';
 import { Block } from './traits';

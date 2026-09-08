@@ -2,7 +2,7 @@ import { createActions } from 'koota';
 import { Vector3 } from 'three';
 import { CharacterController, Input, IsIdle } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Pig, Wander } from './traits';
 
 export const pigActions = createActions((world) => {

@@ -2,7 +2,7 @@ import type { World } from 'koota';
 import { useEffect } from 'react';
 import { actions } from '../actions';
 import { Player } from '../player/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Keys, Pointer, Wheel } from './traits';
 
 export function useKeyboard(world: World) {

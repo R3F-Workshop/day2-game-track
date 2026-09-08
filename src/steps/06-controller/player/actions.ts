@@ -2,7 +2,7 @@ import { createActions } from 'koota';
 import { Vector3 } from 'three';
 import { CharacterController, Input } from '../character/traits';
 import { Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { Player } from './traits';
 
 export const playerActions = createActions((world) => ({

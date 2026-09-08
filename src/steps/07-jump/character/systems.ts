@@ -1,7 +1,7 @@
 import type { World } from 'koota';
 import { IsGrounded, Velocity } from '../physics/traits';
 import { Time } from '../time/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { CharacterController, Input } from './traits';
 
 export function updateCharacterController(world: World) {

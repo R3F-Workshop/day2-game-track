@@ -7,7 +7,7 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { Box3, MathUtils, Mesh, Vector3 } from 'three/webgpu';
 import { IsWalking } from '../character/traits';
 import { BoxCollider, Velocity } from '../physics/traits';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Pig } from './traits';
 

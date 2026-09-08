@@ -16,7 +16,7 @@ await test('view sync in completed lessons', async (suite) => {
 
   for (const step of (await readdir(new URL('../src/steps/', import.meta.url))).sort().slice(2)) {
     const load = (file) => server.ssrLoadModule(`/src/steps/${step}/${file}.ts`);
-    const { Position, Rotation } = await load('transform/traits');
+    const { Position, Rotation } = await load('transform');
     const { Ref } = await load('view/traits');
     const { captureRef } = await load('view/capture-ref');
     const { syncTransforms } = await load('view/systems');

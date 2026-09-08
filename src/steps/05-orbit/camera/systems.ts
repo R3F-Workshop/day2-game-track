@@ -1,7 +1,7 @@
 import type { World } from 'koota';
 import { MathUtils, Matrix4, Vector3 } from 'three';
 import { Pointer, Wheel } from '../input/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { OrbitController } from './traits';
 
 const UP = new Vector3(0, 1, 0);

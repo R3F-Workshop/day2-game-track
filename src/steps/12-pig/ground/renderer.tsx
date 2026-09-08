@@ -4,7 +4,7 @@ import type { Entity } from 'koota';
 import { useActions, useQueryFirst } from 'koota/react';
 import { RepeatWrapping } from 'three/webgpu';
 import { blockActions } from '../block/actions';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { captureRef } from '../view/capture-ref';
 import { Ground } from './traits';
 

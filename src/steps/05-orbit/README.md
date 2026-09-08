@@ -145,7 +145,7 @@ In `camera/actions.ts`, the controller now decides where the camera sits, so `sp
 ```ts
 import { createActions } from 'koota';
 import { Vector3 } from 'three';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { Camera, OrbitController } from './traits';
 
 export const cameraActions = createActions((world) => ({
@@ -169,7 +169,7 @@ Create `camera/systems.ts` with two systems. One turns input into a new orbit, t
 import type { World } from 'koota';
 import { MathUtils, Matrix4, Vector3 } from 'three';
 import { Pointer, Wheel } from '../input/traits';
-import { Position, Rotation } from '../transform/traits';
+import { Position, Rotation } from '../transform';
 import { OrbitController } from './traits';
 
 const UP = new Vector3(0, 1, 0);

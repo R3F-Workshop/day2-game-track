@@ -1,6 +1,6 @@
 import { Not, type World } from 'koota';
 import type { Vector3 } from 'three';
-import { Position } from '../transform/traits';
+import { Position } from '../transform';
 import { BoxCollider, IsGrounded, PlaneCollider, Velocity } from './traits';
 
 // Lifts every box that sank into a floor back on top of it, and marks it as standing.
