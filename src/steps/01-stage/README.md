@@ -43,19 +43,23 @@ function Sun() {
       intensity={0.8 * Math.PI}
       position={[100, 100, 100]}
       shadow-mapSize={[2048, 2048]}
-      shadow-camera-left={-60}
-      shadow-camera-right={60}
-      shadow-camera-top={60}
-      shadow-camera-bottom={-60}
-      shadow-camera-near={10}
-      shadow-camera-far={400}
-      shadow-bias={-0.0005}
+      shadow-camera-left={-20}
+      shadow-camera-right={20}
+      shadow-camera-top={20}
+      shadow-camera-bottom={-20}
+      shadow-camera-near={100}
+      shadow-camera-far={250}
+      shadow-bias={-0.00001}
+      shadow-normalBias={0.02}
+      shadow-radius={2}
     />
   );
 }
 ```
 
-The light's shadow camera covers a box 120 units across. Only objects inside that box cast shadows.
+The shadow camera covers a box 40 units across, centered on the origin. A smaller box gives each shadow more detail at the same map size. Only objects inside it cast shadows.
+
+A small `bias` keeps shadows close to the objects. `normalBias` helps surfaces avoid shadowing themselves, and `radius` softens the edges.
 
 Run `pnpm dev` and open [your practice game](http://localhost:5173/). You should see the sky. The light needs a surface before we can see what it lights.
 
